@@ -170,11 +170,11 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=16, pin_memory=True)
 
     # model setup and optimizer config
-    model = Model(feature_dim, dataset).cuda()
+    model = Model(feature_dim, dataset)
     if dataset == 'cifar10':
-        flops, params = profile(model, inputs=(torch.randn(1, 3, 32, 32).cuda(),))
+        flops, params = profile(model, inputs=(torch.randn(1, 3, 32, 32),))
     elif dataset == 'tiny_imagenet' or dataset == 'stl10':
-        flops, params = profile(model, inputs=(torch.randn(1, 3, 64, 64).cuda(),))
+        flops, params = profile(model, inputs=(torch.randn(1, 3, 64, 64),))
 
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
