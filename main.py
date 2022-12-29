@@ -12,9 +12,11 @@ import utils
 from model import Model
 
 import torchvision
+model.to(dev)
+data = data.to(dev)
 
-if torch.cuda.is_available():
-    torch.backends.cudnn.benchmark = True
+#if torch.cuda.is_available():
+    #torch.backends.cudnn.benchmark = True
 
 def off_diagonal(x):
     # return a flattened view of the off-diagonal elements of a square matrix
@@ -170,11 +172,11 @@ if __name__ == '__main__':
     test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False, num_workers=16, pin_memory=True)
 
     # model setup and optimizer config
-    model = Model(feature_dim, dataset)
+    model = Model(feature_dim, dataset).cuda()
     if dataset == 'cifar10':
-        flops, params = profile(model, inputs=(torch.randn(1, 3, 32, 32),))
+        flops, params = profile(model, inputs=(torch.randn(1, 3, 32, 32).cuda(),))
     elif dataset == 'tiny_imagenet' or dataset == 'stl10':
-        flops, params = profile(model, inputs=(torch.randn(1, 3, 64, 64),))
+        flops, params = profile(model, inputs=(torch.randn(1, 3, 64, 64).cuda(),))
 
     flops, params = clever_format([flops, params])
     print('# Model Params: {} FLOPs: {}'.format(params, flops))
